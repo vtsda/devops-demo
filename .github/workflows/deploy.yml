@@ -1,0 +1,25 @@
+    name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - main  # Change if using a different branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to Azure VM
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: 40.81.240.108
+          username: devops-demo
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          script: |
+            cd /var/www/html
+            sudo git pull origin main
+            sudo systemctl restart apache2
